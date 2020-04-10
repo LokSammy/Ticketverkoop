@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Ticketverkoop.ViewModels.StadionVM>
+﻿@model IEnumerable<Ticketverkoop.ViewModels.WedstrijdVM>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Stadions</h1>
+<h1>Wedstrijden</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.ThuisClubNaam)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Naam)
+                @Html.DisplayNameFor(model => model.UitClubNaam)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Adres)
+                @Html.DisplayNameFor(model => model.Datum)
             </th>
             <th></th>
         </tr>
@@ -28,13 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Naam)
+                @Html.DisplayFor(modelItem => item.UitClubNaam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Adres)
+                @Html.DisplayFor(modelItem => item.Datum)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
