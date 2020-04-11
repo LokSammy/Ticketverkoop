@@ -54,7 +54,7 @@ namespace Ticketverkoop.Controllers
 
             ShoppingCartVM shopping;
 
-            if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+             if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
             {
                 shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             }
@@ -63,10 +63,21 @@ namespace Ticketverkoop.Controllers
                 shopping = new ShoppingCartVM();
                 shopping.Cart = new List<CartVM>();
             }
-            shopping.Cart.Add(item);
 
+            Boolean wedstrijdZitAlInShoppingCart = false;
+            foreach (CartVM cart in shopping.Cart)
+            {
+                if (cart.WedstrijdId == item.WedstrijdId)
+                {
+                    wedstrijdZitAlInShoppingCart = true;
+                    ViewBag.Message = "U kan niet 2 keer dezelfde wedstrijd boeken.";
+                }
+            }
+            if (wedstrijdZitAlInShoppingCart == false)
+            {
+                shopping.Cart.Add(item);
+            }
             HttpContext.Session.SetObject("ShoppingCart", shopping);
-
             return RedirectToAction("Index", "ShoppingCart");
 
         }
