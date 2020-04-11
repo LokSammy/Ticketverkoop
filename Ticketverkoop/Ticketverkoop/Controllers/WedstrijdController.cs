@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Ticketverkoop.Domain.Entities;
 using Ticketverkoop.Extensions;
 using Ticketverkoop.Service;

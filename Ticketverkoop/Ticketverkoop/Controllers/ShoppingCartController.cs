@@ -60,4 +60,5 @@ namespace Ticketverkoop.Controllers
             HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
             return View("Index", shoppingCartVM);
         }
+    }
 }
