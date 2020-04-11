@@ -54,6 +54,14 @@ namespace Ticketverkoop.Domain.Entities
                     .HasMaxLength(450);
 
                 entity.Property(e => e.Prijs).HasColumnType("decimal(12, 2)");
+
+                entity.Property(e => e.VakId).HasColumnName("Vak_id");
+
+                entity.HasOne(d => d.Vak)
+                    .WithMany(p => p.Abonnement)
+                    .HasForeignKey(d => d.VakId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Vak_id_Abonnement");
             });
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
@@ -176,7 +184,6 @@ namespace Ticketverkoop.Domain.Entities
                 entity.HasOne(d => d.Abonnement)
                     .WithMany(p => p.Bestelling)
                     .HasForeignKey(d => d.AbonnementId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Abonnement_id_Bestelling");
 
                 entity.HasOne(d => d.Gebruiker)
@@ -188,7 +195,6 @@ namespace Ticketverkoop.Domain.Entities
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.Bestelling)
                     .HasForeignKey(d => d.TicketId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Ticket_id_Bestelling");
             });
 
