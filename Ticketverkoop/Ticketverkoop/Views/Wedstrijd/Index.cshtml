@@ -6,6 +6,41 @@
 
 <h1>Wedstrijden</h1>
 
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="ClubSearchAjax"
+              data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#content"
+              data-ajax-loading="#divloading"
+              data-ajax-success="Success"
+              data-ajax-failure="Failure">
+
+
+            <div class="form-group">
+                <label for="clubId" class="control-label"></label>
+                <select name="clubId" id="clubId"
+                        asp-items="@ViewBag.lstClubs">
+                    <option>Zoek naar een club...</option>
+                </select>
+
+            </div>
+
+
+        </form>
+    </div>
+</div>
+
+<img id="divloading"
+     src="~/images/loading.gif" 
+     style="display: none" />
+
+<div id="content">
+
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -27,32 +62,32 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UitClubNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Datum)
-            </td>
-            <td>
-                <div class="form-group">
-                    <label for="vakId" class="control-label"></label>
-                    <select name="vakId" id="vakId"
-                            asp-items="@item.Vakken">
-                        <option>Kies een vak...</option>
-                    </select>
-                </div>
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                @Html.ActionLink("ShoppingCart", "Koop", new { id = item.Id })
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ThuisClubNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UitClubNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Datum)
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="vakId" class="control-label"></label>
+                        <select name="vakId" id="vakId"
+                                asp-items="@item.Vakken">
+                            <option>Kies een vak...</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("ShoppingCart", "Koop", new { id = item.Id })
+                </td>
+            </tr>
         }
     </tbody>
 </table>

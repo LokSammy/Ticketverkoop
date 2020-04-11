@@ -18,16 +18,20 @@ namespace Ticketverkoop.Controllers
 
         private readonly WedstrijdService wedstrijdService;
         private readonly VakService vakService;
+        private readonly ClubService clubService;
 
         public WedstrijdController(IMapper mapper)
         {
             _mapper = mapper;
             wedstrijdService = new WedstrijdService();
             vakService = new VakService();
+            clubService = new ClubService();
         }
 
         public IActionResult Index()
         {
+            ViewBag.lstClubs = new SelectList(clubService.GetAll(), "Id", "Naam");
+
             var list = wedstrijdService.GetAll();
 
             var listVM = _mapper.Map<List<WedstrijdVM>>(list);
@@ -39,6 +43,12 @@ namespace Ticketverkoop.Controllers
 
             return View(listVM);
         }
+
+        //[HttpPost]
+        //public IActionResult Index(int? clubId)
+        //{
+        //    clubService = new ClubService();
+        //}
 
         public IActionResult Koop(int? id)
         {
