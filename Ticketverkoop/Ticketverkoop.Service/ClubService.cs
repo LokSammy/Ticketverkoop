@@ -19,5 +19,10 @@ namespace Ticketverkoop.Service
         {
             return _clubDAO.GetAll();
         }
+
+        public Club GetClubById(int Id)
+        {
+            return _clubDAO.GetClubById(Id);
+        }
     }
 }

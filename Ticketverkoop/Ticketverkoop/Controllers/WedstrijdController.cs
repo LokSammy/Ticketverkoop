@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Ticketverkoop.Domain.Entities;
+using Ticketverkoop.Extensions;
 using Ticketverkoop.Service;
 using Ticketverkoop.ViewModels;
 
@@ -29,6 +30,45 @@ namespace Ticketverkoop.Controllers
             var listVM = _mapper.Map<List<WedstrijdVM>>(list);
 
             return View(listVM);
+        }
+
+        public IActionResult Koop(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(id));
+
+            CartVM item = new CartVM
+            {
+                WedstrijdId = wedstrijd.Id,
+                Prijs = 15,
+                WedstrijdDatum = wedstrijd.Datum,
+                UitCLub = wedstrijd.UitClub.Naam,
+                ThuisClub = wedstrijd.ThuisClub.Naam
+
+
+            };
+
+            ShoppingCartVM shopping;
+
+            if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+            {
+                shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            }
+            else
+            {
+                shopping = new ShoppingCartVM();
+                shopping.Cart = new List<CartVM>();
+            }
+            shopping.Cart.Add(item);
+
+            HttpContext.Session.SetObject("ShoppingCart", shopping);
+
+            return RedirectToAction("Index", "ShoppingCart");
+
         }
     }
 }
