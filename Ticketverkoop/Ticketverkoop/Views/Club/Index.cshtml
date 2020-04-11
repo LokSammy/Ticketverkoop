@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Logo)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vakken)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -41,6 +44,15 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Logo)
+            </td>
+            <td>
+                <div class="form-group">
+                    <label for="vakId" class="control-label"></label>
+                    <select name="vakId" id="vakId"
+                            asp-items="@item.Vakken">
+                        <option>Kies een vak...</option>
+                    </select>
+                </div>
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |

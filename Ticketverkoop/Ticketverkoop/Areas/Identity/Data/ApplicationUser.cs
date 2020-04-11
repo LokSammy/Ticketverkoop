@@ -14,5 +14,6 @@ namespace Ticketverkoop.Areas.Identity.Data
         public string FirstName { get; set; }
         [PersonalData]
         public DateTime DOB { get; set; }
+
     }
 }
