@@ -18,29 +18,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.Datum)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vakken)
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ThuisClubNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UitClubNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Datum)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                    @Html.ActionLink("ShoppingCart", "Koop", new { id = item.Id })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UitClubNaam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Datum)
+            </td>
+            <td>
+                <div class="form-group">
+                    <label for="vakId" class="control-label"></label>
+                    <select name="vakId" id="vakId"
+                            asp-items="@item.Vakken">
+                        <option>Kies een vak...</option>
+                    </select>
+                </div>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("ShoppingCart", "Koop", new { id = item.Id })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

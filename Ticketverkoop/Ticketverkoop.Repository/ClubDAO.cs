@@ -9,11 +9,11 @@ namespace Ticketverkoop.Repository
 {
     public class ClubDAO
     {
-        private readonly TicketverkoopContext _dbContext;
+        private readonly TicketVerkoopContext _dbContext;
 
         public ClubDAO()
         {
-            _dbContext = new TicketverkoopContext();
+            _dbContext = new TicketVerkoopContext();
         }
 
         public Club GetClubById(int Id)

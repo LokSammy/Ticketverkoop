@@ -17,6 +17,7 @@ namespace Ticketverkoop.Domain.Entities
         public int VakId { get; set; }
         public decimal Prijs { get; set; }
 
+        public virtual AspNetUsers Gebruiker { get; set; }
         public virtual Vak Vak { get; set; }
         public virtual Wedstrijd Wedstrijd { get; set; }
         public virtual ICollection<Bestelling> Bestelling { get; set; }

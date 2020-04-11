@@ -9,7 +9,6 @@ namespace Ticketverkoop.Domain.Entities
         {
             Club = new HashSet<Club>();
             StadionVak = new HashSet<StadionVak>();
-            Vak = new HashSet<Vak>();
         }
 
         public int Id { get; set; }
@@ -18,6 +17,5 @@ namespace Ticketverkoop.Domain.Entities
 
         public virtual ICollection<Club> Club { get; set; }
         public virtual ICollection<StadionVak> StadionVak { get; set; }
-        public virtual ICollection<Vak> Vak { get; set; }
     }
 }

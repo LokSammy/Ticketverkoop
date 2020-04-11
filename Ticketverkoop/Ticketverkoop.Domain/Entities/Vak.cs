@@ -12,12 +12,8 @@ namespace Ticketverkoop.Domain.Entities
         }
 
         public int Id { get; set; }
-        public string Naam { get; set; }
-        public int StadionId { get; set; }
-        public int AantalPlaatsen { get; set; }
-        public decimal Prijs { get; set; }
+        public string Omschrijving { get; set; }
 
-        public virtual Stadion Stadion { get; set; }
         public virtual ICollection<StadionVak> StadionVak { get; set; }
         public virtual ICollection<Ticket> Ticket { get; set; }
     }

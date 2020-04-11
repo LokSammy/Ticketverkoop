@@ -4,18 +4,25 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ticketverkoop.Domain.Entities
 {
-    public partial class TicketverkoopContext : DbContext
+    public partial class TicketVerkoopContext : DbContext
     {
-        public TicketverkoopContext()
+        public TicketVerkoopContext()
         {
         }
 
-        public TicketverkoopContext(DbContextOptions<TicketverkoopContext> options)
+        public TicketVerkoopContext(DbContextOptions<TicketVerkoopContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Abonnement> Abonnement { get; set; }
+        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
+        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
+        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Bestelling> Bestelling { get; set; }
         public virtual DbSet<Club> Club { get; set; }
         public virtual DbSet<Stadion> Stadion { get; set; }
@@ -31,7 +38,7 @@ namespace Ticketverkoop.Domain.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.\\SQL_VIVES; Database=Ticketverkoop;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\SQL_VIVES;Database=TicketVerkoop;Trusted_Connection=True;");
             }
         }
 
@@ -47,6 +54,112 @@ namespace Ticketverkoop.Domain.Entities
                     .HasMaxLength(450);
 
                 entity.Property(e => e.Prijs).HasColumnType("decimal(12, 2)");
+            });
+
+            modelBuilder.Entity<AspNetRoleClaims>(entity =>
+            {
+                entity.HasIndex(e => e.RoleId);
+
+                entity.Property(e => e.RoleId).IsRequired();
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
+
+            modelBuilder.Entity<AspNetRoles>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedName)
+                    .HasName("RoleNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedName] IS NOT NULL)");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Name).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUserClaims>(entity =>
+            {
+                entity.HasIndex(e => e.UserId);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserLogins>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.HasIndex(e => e.UserId);
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserRoles>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
+
+                entity.HasIndex(e => e.RoleId);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserTokens>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.Name).HasMaxLength(128);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUsers>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedEmail)
+                    .HasName("EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName)
+                    .HasName("UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Dob)
+                    .HasColumnName("DOB")
+                    .HasDefaultValueSql("('0001-01-01T00:00:00.0000000')");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
             modelBuilder.Entity<Bestelling>(entity =>
@@ -65,6 +178,12 @@ namespace Ticketverkoop.Domain.Entities
                     .HasForeignKey(d => d.AbonnementId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Abonnement_id_Bestelling");
+
+                entity.HasOne(d => d.Gebruiker)
+                    .WithMany(p => p.Bestelling)
+                    .HasForeignKey(d => d.GebruikerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Gebruiker_id_Bestelling");
 
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.Bestelling)
@@ -101,6 +220,8 @@ namespace Ticketverkoop.Domain.Entities
 
             modelBuilder.Entity<StadionVak>(entity =>
             {
+                entity.Property(e => e.Prijs).HasColumnType("decimal(12, 2)");
+
                 entity.Property(e => e.StadionId).HasColumnName("Stadion_id");
 
                 entity.Property(e => e.VakId).HasColumnName("Vak_id");
@@ -131,6 +252,12 @@ namespace Ticketverkoop.Domain.Entities
 
                 entity.Property(e => e.WedstrijdId).HasColumnName("Wedstrijd_id");
 
+                entity.HasOne(d => d.Gebruiker)
+                    .WithMany(p => p.Ticket)
+                    .HasForeignKey(d => d.GebruikerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Gebruiker_id_Ticket");
+
                 entity.HasOne(d => d.Vak)
                     .WithMany(p => p.Ticket)
                     .HasForeignKey(d => d.VakId)
@@ -146,30 +273,31 @@ namespace Ticketverkoop.Domain.Entities
 
             modelBuilder.Entity<Vak>(entity =>
             {
-                entity.Property(e => e.Naam)
+                entity.Property(e => e.Omschrijving)
                     .IsRequired()
                     .HasMaxLength(40);
-
-                entity.Property(e => e.Prijs).HasColumnType("decimal(12, 2)");
-
-                entity.Property(e => e.StadionId).HasColumnName("Stadion_id");
-
-                entity.HasOne(d => d.Stadion)
-                    .WithMany(p => p.Vak)
-                    .HasForeignKey(d => d.StadionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Stadion_id_Vak");
             });
 
             modelBuilder.Entity<Voucher>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
+                entity.Property(e => e.GebruikerId)
+                    .IsRequired()
+                    .HasColumnName("Gebruiker_id")
+                    .HasMaxLength(450);
+
                 entity.Property(e => e.TicketId)
                     .HasColumnName("Ticket_id")
                     .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ZitplaatsId).HasColumnName("Zitplaats_id");
+
+                entity.HasOne(d => d.Gebruiker)
+                    .WithMany(p => p.Voucher)
+                    .HasForeignKey(d => d.GebruikerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Gebruiker_id_Voucher");
 
                 entity.HasOne(d => d.Ticket)
                     .WithMany(p => p.Voucher)

@@ -17,11 +17,13 @@ namespace Ticketverkoop.Controllers
         private IMapper _mapper;
 
         private readonly WedstrijdService wedstrijdService;
+        private readonly VakService vakService;
 
         public WedstrijdController(IMapper mapper)
         {
             _mapper = mapper;
             wedstrijdService = new WedstrijdService();
+            vakService = new VakService();
         }
 
         public IActionResult Index()
@@ -29,6 +31,11 @@ namespace Ticketverkoop.Controllers
             var list = wedstrijdService.GetAll();
 
             var listVM = _mapper.Map<List<WedstrijdVM>>(list);
+
+            foreach(WedstrijdVM wedstrijdVM in listVM)
+            {
+                wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+            }
 
             return View(listVM);
         }
@@ -49,8 +56,6 @@ namespace Ticketverkoop.Controllers
                 WedstrijdDatum = wedstrijd.Datum,
                 UitCLub = wedstrijd.UitClub.Naam,
                 ThuisClub = wedstrijd.ThuisClub.Naam
-
-
             };
 
             ShoppingCartVM shopping;

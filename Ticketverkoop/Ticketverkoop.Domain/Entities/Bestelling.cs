@@ -12,6 +12,7 @@ namespace Ticketverkoop.Domain.Entities
         public string GebruikerId { get; set; }
 
         public virtual Abonnement Abonnement { get; set; }
+        public virtual AspNetUsers Gebruiker { get; set; }
         public virtual Ticket Ticket { get; set; }
     }
 }
