@@ -25,5 +25,11 @@ namespace Ticketverkoop.Service
         {
             return _wedstrijdDAO.GetAll();
         }
+
+        public IEnumerable<Wedstrijd> GetWedstrijdenByClub(int? id)
+        {
+            return _wedstrijdDAO.GetWedstrijdenByClub(id);
+        }
+        
     }
 }

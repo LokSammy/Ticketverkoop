@@ -14,11 +14,11 @@ namespace Ticketverkoop.Controllers
 {
     public class WedstrijdController : Controller
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        private readonly WedstrijdService wedstrijdService;
-        private readonly VakService vakService;
-        private readonly ClubService clubService;
+        private  WedstrijdService wedstrijdService;
+        private  VakService vakService;
+        private  ClubService clubService;
 
         public WedstrijdController(IMapper mapper)
         {
@@ -44,11 +44,24 @@ namespace Ticketverkoop.Controllers
             return View(listVM);
         }
 
-        //[HttpPost]
-        //public IActionResult Index(int? clubId)
-        //{
-        //    clubService = new ClubService();
-        //}
+        [HttpPost]
+        public IActionResult Index(int? clubId)
+        {
+            if (clubId != null)
+            {
+                var clublist = wedstrijdService.GetWedstrijdenByClub(Convert.ToInt32(clubId));
+
+                List<WedstrijdVM> listClubVM = _mapper.Map<List<WedstrijdVM>>(clublist);
+
+                return View(listClubVM);
+            }
+
+            var list = wedstrijdService.GetAll();
+
+            var listVM = _mapper.Map<List<WedstrijdVM>>(list);
+
+            return View(listVM);
+        }
 
         public IActionResult Koop(int? id)
         {

@@ -32,5 +32,14 @@ namespace Ticketverkoop.Repository
                 .Include(s => s.ThuisClub)
                 .Include(s => s.UitClub).First();
         }
+
+        public IEnumerable<Wedstrijd> GetWedstrijdenByClub(int? ClubId)
+        {
+            return _dbContext.Wedstrijd
+                .Where(s => (s.ThuisClubId == ClubId || s.UitClubId == ClubId))
+                .Include(s => s.ThuisClub)
+                .Include(s => s.UitClub)
+                .ToList();
+        }
     }
 }
