@@ -16,16 +16,19 @@ namespace Ticketverkoop.Repository
             _dbContext = new TicketVerkoopContext();
         }
 
-        public Club GetClubById(int Id)
+        public Club GetClubById(int id)
         {
             return _dbContext.Club
-                .Where(s => s.Id == Id)
-                .Include(s => s.Stadion).First();
+                .Where(s => s.Id == id)
+                .Include(s => s.Stadion)
+                .First();
         }
 
         public IEnumerable<Club> GetAll()
         {
-            return _dbContext.Club.ToList();
+            return _dbContext.Club
+                .Include(s => s.Stadion)
+                .ToList();
         }
     }
 }

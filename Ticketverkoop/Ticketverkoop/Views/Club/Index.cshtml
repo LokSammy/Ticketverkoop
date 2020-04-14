@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Naam)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StadionId)
+                @Html.DisplayNameFor(model => model.StadionNaam)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Logo)
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Naam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StadionId)
+                @Html.DisplayFor(modelItem => item.StadionNaam)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Logo)
@@ -56,7 +56,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id}) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>

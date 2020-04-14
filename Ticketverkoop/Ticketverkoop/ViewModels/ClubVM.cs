@@ -11,7 +11,10 @@ namespace Ticketverkoop.ViewModels
     {
         public int Id { get; set; }
         public string Naam { get; set; }
-        public string StadionId { get; set; }
+
+        [Display(Name="Stadion")]
+        public string StadionNaam { get; set; }
+
         public string Logo { get; set; }
         [Display(Name = "Vak")]
         public IEnumerable<SelectListItem> Vakken { get; set; }

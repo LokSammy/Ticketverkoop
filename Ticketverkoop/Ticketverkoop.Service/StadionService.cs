@@ -19,5 +19,10 @@ namespace Ticketverkoop.Service
         {
             return _stadionDAO.GetAll();
         }
+
+        public Stadion GetStadionById(int id)
+        {
+            return _stadionDAO.GetStadionById(id);
+        }
     }
 }

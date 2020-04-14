@@ -21,5 +21,12 @@ namespace Ticketverkoop.Repository
         {
             return _dbContext.Stadion.ToList();
         }
+
+        public Stadion GetStadionById(int id)
+        {
+            return _dbContext.Stadion
+                .Where(s => s.Id == id)
+                .First();
+        }
     }
 }
