@@ -99,7 +99,7 @@
                 </div>
             </td>
             <td>
-                <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId="2">Koop tickets</a>
+                <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId="@item.GekozenVakId">Koop tickets</a>
             </td>
         </tr>
         }
