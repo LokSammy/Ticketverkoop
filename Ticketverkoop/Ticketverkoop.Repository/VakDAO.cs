@@ -17,16 +17,21 @@ namespace Ticketverkoop.Repository
             _dbContext = new TicketVerkoopContext();
         }
 
+        public Vak GetVakById(int id)
+        {
+            
+                return _dbContext.Vak
+                .Where(s => s.Id == id)
+                .First();
+            
+        }
+
         public List<Vak> GetAll()
         {
-            try
-            {
+            
                 return _dbContext.Vak.ToList();
-            } 
-            catch (Exception e)
-            {
-                throw e;
-            }
-        } 
+            
+            
+        }
     }
 }

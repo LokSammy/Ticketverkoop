@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Ticketverkoop.Extensions;
@@ -33,29 +34,36 @@ namespace Ticketverkoop.Controllers
             ShoppingCartVM cartList =
                 HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             // call SessionID
-            var itemToRemove = cartList.Cart.FirstOrDefault(r => r.WedstrijdId == WedstrijdId);
+            var SessionId = HttpContext.Session.Id;
+            var itemToRemove = cartList.ShoppingCart.FirstOrDefault(r => r.WedstrijdId == WedstrijdId);
             if (itemToRemove != null)
             {
-                cartList.Cart.Remove(itemToRemove);
+                cartList.ShoppingCart.Remove(itemToRemove);
                 HttpContext.Session.SetObject("ShoppingCart", cartList);
             }
 
             return View("Index", cartList);
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Gegevens(ShoppingCartVM shoppingCartVM)
+        public IActionResult Payment(ShoppingCartVM shoppingCartVM)
         {
             ShoppingCartVM cartList =
                 HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            for (int i = 0; i < cartList.Cart.Count; i++)
+            for (int i = 0; i < cartList.ShoppingCart.Count; i++)
             {
-                CartVM cart = cartList.Cart[i];
+                CartVM cart = cartList.ShoppingCart[i];
 
-                shoppingCartVM.Cart[i].ThuisClub = cart.ThuisClub;
-                shoppingCartVM.Cart[i].UitCLub = cart.UitCLub;
-                shoppingCartVM.Cart[i].WedstrijdDatum = cart.WedstrijdDatum;
-                shoppingCartVM.Cart[i].Prijs = cart.Prijs;
+                shoppingCartVM.ShoppingCart[i].WedstrijdId = cart.WedstrijdId;
+                shoppingCartVM.ShoppingCart[i].ThuisClubId = cart.ThuisClubId;
+                shoppingCartVM.ShoppingCart[i].ThuisClubNaam = cart.ThuisClubNaam;
+                shoppingCartVM.ShoppingCart[i].UitCLubNaam = cart.UitCLubNaam;
+                shoppingCartVM.ShoppingCart[i].StadiumNaam = cart.StadiumNaam;
+                shoppingCartVM.ShoppingCart[i].VakNaam = cart.VakNaam;
+                shoppingCartVM.ShoppingCart[i].WedstrijdDatum = cart.WedstrijdDatum;
+                shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
+                shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
             }
             HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
             return View("Index", shoppingCartVM);

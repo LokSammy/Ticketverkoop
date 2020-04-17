@@ -19,6 +19,8 @@ namespace Ticketverkoop.Controllers
         private  WedstrijdService wedstrijdService;
         private  VakService vakService;
         private  ClubService clubService;
+        private StadionService stadionService;
+        private StadionVakService stadionVakService;
 
         public WedstrijdController(IMapper mapper)
         {
@@ -26,32 +28,27 @@ namespace Ticketverkoop.Controllers
             wedstrijdService = new WedstrijdService();
             vakService = new VakService();
             clubService = new ClubService();
+            stadionService = new StadionService();
+            stadionVakService = new StadionVakService();
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? clubId)
         {
             ViewBag.lstClubs = new SelectList(clubService.GetAll(), "Id", "Naam");
 
-            var list = wedstrijdService.GetAll();
-
-            var listVM = _mapper.Map<List<WedstrijdVM>>(list);
-
-            foreach(WedstrijdVM wedstrijdVM in listVM)
-            {
-                wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
-            }
-
-            return View(listVM);
-        }
-
-        [HttpPost]
-        public IActionResult Index(int? clubId)
-        {
             if (clubId != null)
             {
                 var clublist = wedstrijdService.GetWedstrijdenByClub(Convert.ToInt32(clubId));
 
                 List<WedstrijdVM> listClubVM = _mapper.Map<List<WedstrijdVM>>(clublist);
+
+                foreach (WedstrijdVM wedstrijdVM in listClubVM)
+                {
+                    int wedId = wedstrijdVM.Id;
+                    string stadNaam = stadionService.GetStadionById(wedstrijdService.GetWedstrijdById(Convert.ToInt32(wedId)).ThuisClub.StadionId).Naam;
+                    wedstrijdVM.StadionNaam = stadNaam;
+                    wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+                }
 
                 return View(listClubVM);
             }
@@ -60,25 +57,44 @@ namespace Ticketverkoop.Controllers
 
             var listVM = _mapper.Map<List<WedstrijdVM>>(list);
 
+            foreach (WedstrijdVM wedstrijdVM in listVM)
+            {
+                int wedId = wedstrijdVM.Id;
+                string stadNaam = stadionService.GetStadionById(wedstrijdService.GetWedstrijdById(Convert.ToInt32(wedId)).ThuisClub.StadionId).Naam;
+                wedstrijdVM.StadionNaam = stadNaam;
+                wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+            }
+
             return View(listVM);
         }
 
-        public IActionResult Koop(int? id)
+        public IActionResult Koop(int? wetId, int? vakId)
         {
-            if (id == null)
+            if (wetId == null || vakId == null)
             {
                 return NotFound();
             }
 
-            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(id));
+            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(wetId));
+            Club thuisclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.ThuisClubId));
+            Club uitclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.UitClubId));
+            Stadion stadion = stadionService.GetStadionById(Convert.ToInt32(thuisclub.StadionId));
+            Vak vak = vakService.GetVakById(Convert.ToInt32(vakId));
+            StadionVak stadionVak = stadionVakService.GetStadionVakByStadIdAndVakId(Convert.ToInt32(stadion.Id), Convert.ToInt32(vak.Id));
+
+            decimal kostprijs = stadionVak.Prijs;
 
             CartVM item = new CartVM
             {
                 WedstrijdId = wedstrijd.Id,
-                Prijs = 15,
+                ThuisClubId = thuisclub.Id,
+                ThuisClubNaam = thuisclub.Naam,
+                UitCLubNaam = uitclub.Naam,
+                StadiumNaam = stadion.Naam,
+                VakNaam = vak.Omschrijving,
                 WedstrijdDatum = wedstrijd.Datum,
-                UitCLub = wedstrijd.UitClub.Naam,
-                ThuisClub = wedstrijd.ThuisClub.Naam
+                Prijs = kostprijs,
+                Aantal = 1
             };
 
             ShoppingCartVM shopping;
@@ -90,11 +106,11 @@ namespace Ticketverkoop.Controllers
             else
             {
                 shopping = new ShoppingCartVM();
-                shopping.Cart = new List<CartVM>();
+                shopping.ShoppingCart = new List<CartVM>();
             }
 
             Boolean wedstrijdZitAlInShoppingCart = false;
-            foreach (CartVM cart in shopping.Cart)
+            foreach (CartVM cart in shopping.ShoppingCart)
             {
                 if (cart.WedstrijdId == item.WedstrijdId)
                 {
@@ -104,7 +120,7 @@ namespace Ticketverkoop.Controllers
             }
             if (wedstrijdZitAlInShoppingCart == false)
             {
-                shopping.Cart.Add(item);
+                shopping.ShoppingCart.Add(item);
             }
             HttpContext.Session.SetObject("ShoppingCart", shopping);
             return RedirectToAction("Index", "ShoppingCart");

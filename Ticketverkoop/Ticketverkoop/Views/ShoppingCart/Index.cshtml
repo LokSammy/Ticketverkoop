@@ -1,30 +1,138 @@
-﻿@model IEnumerable<Ticketverkoop.ViewModels.ShoppingCartVM>
+﻿@model Ticketverkoop.ViewModels.ShoppingCartVM
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h3>Inhoud van je winkelwagen</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+@if (Model != null)
+{
 
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+    <form asp-action="Payment" id="target">
+        <table>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].ThuisClubNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].UitCLubNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].StadiumNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].VakNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdDatum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Prijs)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Aantal)
+                </th>
+                <th>
+                    Subtotaal
+                </th>
+            </tr>
+            @{ decimal total = 0;}
+            @for (var i = 0; i < Model.ShoppingCart.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].WedstrijdId" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].ThuisClubNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].UitCLubNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].StadiumNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].VakNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].WedstrijdDatum" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="prijs" readonly="readonly" class="form-control" type="number" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].Aantal" type="number" min="1" max="10" data-aantal="@i" />
+                    </td>
+                    <td>
+                        @{
+                            var subtotaal = Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal;
+                            total += subtotaal;
+                        }
+                        <input id="subtot" value="@subtotaal" type="number" readonly="readonly" />
+                    </td>
+                    <td>
+                        <a asp-action="Delete" asp-route-WedstrijdId="@Model.ShoppingCart[i].WedstrijdId">Delete</a>
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td>
+                    <input type="submit" value="Checkout" class="btn btn-default" />
+                </td>
+            <tr>
+                <td>
+                    Total
+                </td>
+            </tr>
+            <tr>
+                <td id="cart-total">
+                    <input id="txtTotal" value="@total" type="number" readonly="readonly" />
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
 }
-    </tbody>
-</table>
+else
+{ @Html.Raw("Your shoppingcart is empty at the moment")
+}
+
+<a asp-controller="Home"
+   asp-action="Index">
+    Verder winkelen
+</a>
+
+@section Scripts{ 
+
+<script>
+    $(() => {
+        $("[id$=Aantal]").on('change', (e) => {
+            console.log(e);
+            console.log("change");
+            let atl = $(e.currentTarget).val();
+            let prs = parseFloat($('#prijs').val());
+            console.log(atl);
+            let kost = atl * prs;
+            $('#subtot').val(kost);
+
+            let sum;
+            $('[id^=txtSubTotal]').each((index, element) => {
+             
+                    sum += parseFloat($(element).val());
+               
+            });
+            console.log(sum)
+            $('#txtTotal').val(sum);
+
+        })
+    });
+</script>
+}
+

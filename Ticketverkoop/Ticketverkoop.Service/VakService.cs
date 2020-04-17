@@ -19,5 +19,10 @@ namespace Ticketverkoop.Service
         {
             return _vakDAO.GetAll();
         }
+
+        public Vak GetVakById(int id)
+        {
+            return _vakDAO.GetVakById(id);
+        }
     }
 }

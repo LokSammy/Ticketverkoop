@@ -13,7 +13,12 @@ namespace Ticketverkoop.ViewModels
         public string ThuisClubNaam { get; set; }
         public string UitClubNaam { get; set; }
         public DateTime Datum { get; set; }
+        [Display(Name = "Stadion")]
+        public string StadionNaam { get; set; }
         [Display(Name = "Vak")]
         public IEnumerable<SelectListItem> Vakken { get; set; }
+        public int GekozenVakId { get; set; }
+        public float Prijs { get; set; }
+
     }
 }

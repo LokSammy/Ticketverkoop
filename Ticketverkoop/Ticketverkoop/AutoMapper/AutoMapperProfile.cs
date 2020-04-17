@@ -19,7 +19,8 @@ namespace Ticketverkoop.AutoMapper
 
             CreateMap<Wedstrijd, WedstrijdVM>()
                 .ForMember(dest => dest.ThuisClubNaam, opts => opts.MapFrom(src => src.ThuisClub.Naam))
-                .ForMember(dest => dest.UitClubNaam, opts => opts.MapFrom(src => src.UitClub.Naam));
+                .ForMember(dest => dest.UitClubNaam, opts => opts.MapFrom(src => src.UitClub.Naam))
+                .ForMember(dest => dest.StadionNaam, opts => opts.MapFrom(src => src.ThuisClub.Stadion.Naam));
         }
     }
 }
