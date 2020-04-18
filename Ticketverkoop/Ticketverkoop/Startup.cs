@@ -15,7 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using Ticketverkoop.Areas.Identity.Data;
-using Ticketverkoop.Util.Mail;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Ticketverkoop.Services;
 
 namespace Ticketverkoop
 {
@@ -38,11 +39,6 @@ namespace Ticketverkoop
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // send mail
-
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
-
-            services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -63,6 +59,16 @@ namespace Ticketverkoop
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
+
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                new EmailSender(
+                    Configuration["EmailSender:Host"],
+                    Configuration.GetValue<int>("EmailSender:Port"),
+                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    Configuration["EmailSender:UserName"],
+                    Configuration["EmailSender:Password"]
+                    )
+                );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

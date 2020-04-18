@@ -12,29 +12,12 @@ namespace Ticketverkoop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IEmailSender _emailSender;
-
-        public HomeController(IEmailSender emailSender)
-        {
-            _emailSender = emailSender;
-        }
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Contact(SendMailVM sendMailVM)
-        {
-            _emailSender.SendEmailAsync(sendMailVM.FromEmail, "contact pagina", sendMailVM.Message);
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
