@@ -12,9 +12,14 @@ namespace Ticketverkoop.ViewModels
         public int Id { get; set; }
         public string ThuisClubNaam { get; set; }
         public string UitClubNaam { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd MMMM yyyy HH:mm}")]
         public DateTime Datum { get; set; }
+
         [Display(Name = "Stadion")]
         public string StadionNaam { get; set; }
+        
         [Display(Name = "Vak")]
         public IEnumerable<SelectListItem> Vakken { get; set; }
         public int GekozenVakId { get; set; }

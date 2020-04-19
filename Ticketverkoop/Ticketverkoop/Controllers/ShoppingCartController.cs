@@ -14,13 +14,11 @@ namespace Ticketverkoop.Controllers
     {
         public IActionResult Index()
         {
-
             ShoppingCartVM cartList =
               HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
 
             // call SessionID
             var SessionId = HttpContext.Session.Id;
-
 
             return View(cartList);
         }
@@ -65,6 +63,7 @@ namespace Ticketverkoop.Controllers
                 shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
                 shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
             }
+
             HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
             return View("Index", shoppingCartVM);
         }

@@ -99,7 +99,7 @@
                 </div>
             </td>
             <td>
-                <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId="@item.GekozenVakId">Koop tickets</a>
+                <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId=4>Koop tickets</a>
             </td>
         </tr>
         }
@@ -110,7 +110,6 @@
 
 <script>
     $(() => {
-        console.log("ik doe iets");
         $("#clubId").on("change", (e) => {
             console.log(e);
             console.log("change");

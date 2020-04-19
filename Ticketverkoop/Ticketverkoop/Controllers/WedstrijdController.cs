@@ -82,6 +82,7 @@ namespace Ticketverkoop.Controllers
             Vak vak = vakService.GetVakById(Convert.ToInt32(vakId));
             StadionVak stadionVak = stadionVakService.GetStadionVakByStadIdAndVakId(Convert.ToInt32(stadion.Id), Convert.ToInt32(vak.Id));
 
+
             decimal kostprijs = stadionVak.Prijs;
 
             CartVM item = new CartVM
@@ -117,6 +118,7 @@ namespace Ticketverkoop.Controllers
                     wedstrijdZitAlInShoppingCart = true;
                     ViewBag.Message = "U kan niet 2 keer dezelfde wedstrijd boeken.";
                 }
+
             }
             if (wedstrijdZitAlInShoppingCart == false)
             {
