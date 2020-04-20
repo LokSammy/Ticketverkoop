@@ -82,6 +82,12 @@ namespace Ticketverkoop.Controllers
             Vak vak = vakService.GetVakById(Convert.ToInt32(vakId));
             StadionVak stadionVak = stadionVakService.GetStadionVakByStadIdAndVakId(Convert.ToInt32(stadion.Id), Convert.ToInt32(vak.Id));
 
+            if(wedstrijd.Datum > DateTime.Now.AddMonths(1))
+            {
+                ViewBag.Error = "U kan geen wedstrijd boeken een maand op voorhand";
+                return View("Index");
+            }
+
 
             decimal kostprijs = stadionVak.Prijs;
 

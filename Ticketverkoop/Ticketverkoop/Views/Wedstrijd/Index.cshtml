@@ -50,6 +50,15 @@
 
 </div>
 
+<div>
+    <p id="Error">
+        @if(ViewBag.Error != null)
+        {
+            <p class="alert-warning">@ViewBag.Error </p>
+        }
+    </p>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -110,6 +119,8 @@
 
 <script>
     $(() => {
+
+
         $("#clubId").on("change", (e) => {
             console.log(e);
             console.log("change");
