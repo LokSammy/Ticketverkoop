@@ -21,8 +21,9 @@ namespace Ticketverkoop.Repository
         {
             return _dbContext.Wedstrijd
                 .Where(s => s.Datum > DateTime.Now)
-                .Include(s => s.ThuisClub)
                 .Include(s => s.UitClub)
+                .Include(s => s.ThuisClub.Stadion.StadionVak)
+                .OrderBy(s => s.Datum)
                 .ToList();
         }
 

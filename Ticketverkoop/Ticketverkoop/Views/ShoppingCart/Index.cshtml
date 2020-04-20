@@ -43,6 +43,7 @@
             @{ decimal total = 0;}
             @for (var i = 0; i < Model.ShoppingCart.Count; i++)
             {
+                @*<span class="text-danger">@Html.ValidationMessage("error")</span>*@
                 <tr>
                     <td>
                         <input asp-for="@Model.ShoppingCart[i].WedstrijdId" readonly="readonly" class="form-control" />

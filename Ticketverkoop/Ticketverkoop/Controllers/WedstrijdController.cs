@@ -84,8 +84,21 @@ namespace Ticketverkoop.Controllers
 
             if(wedstrijd.Datum > DateTime.Now.AddMonths(1))
             {
-                ViewBag.Error = "U kan geen wedstrijd boeken een maand op voorhand";
-                return View("Index");
+                ModelState.AddModelError("error", "Je kan geen ticket boeken een maand op voorhand.");
+
+                var list = wedstrijdService.GetAll();
+
+                var listVM = _mapper.Map<List<WedstrijdVM>>(list);
+
+                foreach (WedstrijdVM wedstrijdVM in listVM)
+                {
+                    int wedId = wedstrijdVM.Id;
+                    string stadNaam = stadionService.GetStadionById(wedstrijdService.GetWedstrijdById(Convert.ToInt32(wedId)).ThuisClub.StadionId).Naam;
+                    wedstrijdVM.StadionNaam = stadNaam;
+                    wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+                }
+
+                return View("Index", listVM);
             }
 
 

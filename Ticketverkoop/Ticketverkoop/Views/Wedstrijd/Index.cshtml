@@ -8,32 +8,19 @@
 
 <div class="row">
     <div class="col-md-4">
+        <div class="form-group">
+            <label for="clubId" class="control-label"></label>
+            <select name="clubId" id="clubId"
+                    asp-items="@ViewBag.lstClubs">
+                <option id="Clubkeuze">Zoek naar een club...</option>
+            </select>
 
-        <form asp-action="Index"
-              data-ajax="true"
-              data-ajax-method="POST"
-              data-ajax-mode="replace"
-              data-ajax-update="#content"
-              data-ajax-loading="#divloading"
-              data-ajax-success="Success"
-              data-ajax-failure="Failure">
+        </div>
 
+        <div class="form-group">
+            <input type="submit" value="Zoek!" id="zoek" class="btn btn-default" hidden />
+        </div>
 
-            <div class="form-group">
-                <label for="clubId" class="control-label"></label>
-                <select name="clubId" id="clubId"
-                        asp-items="@ViewBag.lstClubs">
-                    <option id="Clubkeuze">Zoek naar een club...</option>
-                </select>
-
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Zoek!" id="zoek" class="btn btn-default" hidden/>
-            </div>
-
-
-        </form>
 
 
         <div class="form-group">
@@ -42,24 +29,9 @@
     </div>
 </div>
 
-<img id="divloading"
-     src="~/images/loading.gif" 
-     style="display: none" />
-
-<div id="content">
-
-</div>
-
-<div>
-    <p id="Error">
-        @if(ViewBag.Error != null)
-        {
-            <p class="alert-warning">@ViewBag.Error </p>
-        }
-    </p>
-</div>
 
 <table class="table">
+    <span class="text-danger">@Html.ValidationMessage("error")</span>
     <thead>
         <tr>
             <th>
@@ -81,54 +53,55 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-
+        @if (Model != null)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UitClubNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Datum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StadionNaam)
-            </td>
-            <td>
-                <div class="form-group">
-                    <label for="vakId" class="control-label"></label>
-                    <select name="vakId" id="vakId"
-                            asp-items="@item.Vakken"
-                            asp-for="@item.GekozenVakId">
-                        <option>Kies een vak...</option>
-                    </select>
-                </div>
-            </td>
-            <td>
-                <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId=4>Koop tickets</a>
-            </td>
-        </tr>
+            @foreach (var item in Model)
+
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ThuisClubNaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UitClubNaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Datum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StadionNaam)
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <label for="vakId" class="control-label"></label>
+                            <select name="vakId" id="vakId"
+                                    asp-items="@item.Vakken"
+                                    asp-for="@item.GekozenVakId">
+                                <option>Kies een vak...</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId=4>Koop tickets</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
 @section Scripts{
 
-<script>
-    $(() => {
+    <script>
+        $(() => {
+            $("#clubId").on("change", (e) => {
+                console.log(e);
+                console.log("change");
+
+                $("#zoek").click();
+            })
+        });
 
 
-        $("#clubId").on("change", (e) => {
-            console.log(e);
-            console.log("change");
-
-            $("#zoek").click();
-        })
-    });
-
-
-</script>
- }
+    </script>
+}
