@@ -66,7 +66,7 @@
                         <input asp-for="@Model.ShoppingCart[i].Prijs" id="prijs" readonly="readonly" class="form-control" type="number" />
                     </td>
                     <td>
-                        <input asp-for="@Model.ShoppingCart[i].Aantal" type="number" min="1" max="10" data-aantal="@i" />
+                        <input asp-for="@Model.ShoppingCart[i].Aantal" id="atlTickets" type="number" min="1" max="10" data-aantal="@i" />
                     </td>
                     <td>
                         @{
@@ -83,7 +83,7 @@
 
             <tr>
                 <td>
-                    <input type="submit" value="Checkout" class="btn btn-default" />
+                    <input id="btnCheckout" type="submit" value="Checkout" class="btn btn-default" />
                 </td>
             <tr>
                 <td>
@@ -132,7 +132,13 @@ else
             $('#txtTotal').val(sum);
 
         })
+
+        $("#btnCheckout"){
+            let aantal = atlTickets.val();
+            console.log(aantal);
+        }
     });
+
 </script>
 }
 
