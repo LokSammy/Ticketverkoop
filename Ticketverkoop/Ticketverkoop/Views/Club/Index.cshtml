@@ -24,10 +24,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Logo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vakken)
-            </th>
-            <th></th>
+            
         </tr>
     </thead>
     <tbody>
@@ -46,15 +43,7 @@
                 <td>
                     <img src="@Url.Content(item.Logo)" height="45" width="45" />
                 </td>
-                <td>
-                    <div class="form-group">
-                        <label for="vakId" class="control-label"></label>
-                        <select name="vakId" id="vakId"
-                                asp-items="@item.Vakken">
-                            <option>Kies een vak...</option>
-                        </select>
-                    </div>
-                </td>
+                
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |

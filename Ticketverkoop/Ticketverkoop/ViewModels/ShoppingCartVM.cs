@@ -18,7 +18,7 @@ namespace Ticketverkoop.ViewModels
         public string UitCLubNaam { get; set; }
         public string StadiumNaam { get; set; }
         public string VakNaam { get; set; }
-        public decimal Prijs { get; set; }
+        public decimal StukPrijs { get; set; }
         public DateTime WedstrijdDatum { get; set; }
         public int Aantal { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -68,23 +69,14 @@ namespace Ticketverkoop.Controllers
             return View(listVM);
         }
 
-        public IActionResult Koop(int? wetId, int? vakId)
+
+        public IActionResult Koop(int? wetId, int? vakId, int atlTickets)
         {
-            if (wetId == null || vakId == null)
+            //geeft listVM terug voor alle wedstrijden
+            IEnumerable<WedstrijdVM> getListWedstrijdVMs()
             {
-                return NotFound();
-            }
+                ViewBag.lstClubs = new SelectList(clubService.GetAll(), "Id", "Naam");
 
-            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(wetId));
-            Club thuisclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.ThuisClubId));
-            Club uitclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.UitClubId));
-            Stadion stadion = stadionService.GetStadionById(Convert.ToInt32(thuisclub.StadionId));
-            Vak vak = vakService.GetVakById(Convert.ToInt32(vakId));
-            StadionVak stadionVak = stadionVakService.GetStadionVakByStadIdAndVakId(Convert.ToInt32(stadion.Id), Convert.ToInt32(vak.Id));
-
-            if(wedstrijd.Datum > DateTime.Now.AddMonths(1))
-            {
-                ModelState.AddModelError("error", "Je kan geen ticket boeken een maand op voorhand.");
 
                 var list = wedstrijdService.GetAll();
 
@@ -97,29 +89,31 @@ namespace Ticketverkoop.Controllers
                     wedstrijdVM.StadionNaam = stadNaam;
                     wedstrijdVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
                 }
-
-                return View("Index", listVM);
+                return listVM;
             }
 
-
-            decimal kostprijs = stadionVak.Prijs;
-
-            CartVM item = new CartVM
+            if (wetId == null || vakId == null || atlTickets == 0)
             {
-                WedstrijdId = wedstrijd.Id,
-                ThuisClubId = thuisclub.Id,
-                ThuisClubNaam = thuisclub.Naam,
-                UitCLubNaam = uitclub.Naam,
-                StadiumNaam = stadion.Naam,
-                VakNaam = vak.Omschrijving,
-                WedstrijdDatum = wedstrijd.Datum,
-                Prijs = kostprijs,
-                Aantal = 1
-            };
+                if (vakId == null || atlTickets == 0) 
+                {
+                    if (atlTickets == 0) { ModelState.AddModelError("error", "Aantal mag niet nul zijn."); }
+                    if (vakId == null) { ModelState.AddModelError("error", "Er moet een vak gekozen worden."); }
+                    return View("Index", getListWedstrijdVMs());
+                }
+                else { return NotFound(); }
 
+            }
+
+            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(wetId));
+            Club thuisclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.ThuisClubId));
+            Club uitclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.UitClubId));
+            Stadion stadion = stadionService.GetStadionById(Convert.ToInt32(thuisclub.StadionId));
+            Vak vak = vakService.GetVakById(Convert.ToInt32(vakId));
+            StadionVak stadionVak = stadionVakService.GetStadionVakByStadIdAndVakId(Convert.ToInt32(stadion.Id), Convert.ToInt32(vak.Id));
             ShoppingCartVM shopping;
+            int atlItems = 0;
 
-             if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+            if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
             {
                 shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             }
@@ -129,23 +123,54 @@ namespace Ticketverkoop.Controllers
                 shopping.ShoppingCart = new List<CartVM>();
             }
 
-            Boolean wedstrijdZitAlInShoppingCart = false;
-            foreach (CartVM cart in shopping.ShoppingCart)
+            Boolean shoppingcartVol()
             {
-                if (cart.WedstrijdId == item.WedstrijdId)
+                foreach (CartVM cart in shopping.ShoppingCart)
                 {
-                    wedstrijdZitAlInShoppingCart = true;
-                    ViewBag.Message = "U kan niet 2 keer dezelfde wedstrijd boeken.";
+                    atlItems += cart.Aantal;
                 }
-
+                if (atlItems >= 10)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            if (wedstrijdZitAlInShoppingCart == false)
+
+
+            if (shoppingcartVol())
             {
-                shopping.ShoppingCart.Add(item);
-            }
-            HttpContext.Session.SetObject("ShoppingCart", shopping);
-            return RedirectToAction("Index", "ShoppingCart");
+                ModelState.AddModelError("error", "Winkelkar zit vol");
 
+
+                return View("Index", getListWedstrijdVMs());
+            }
+            else if((atlItems + atlTickets) > 10)
+            {
+                ModelState.AddModelError("error", "Winkelkar raakt vol men kan slecht nog " + (10 - atlItems) + " wedstrijdtickets bestellen");
+                return View("Index", getListWedstrijdVMs());
+            } 
+            else
+            {
+
+                CartVM item = new CartVM
+                {
+                    WedstrijdId = wedstrijd.Id,
+                    ThuisClubId = thuisclub.Id,
+                    ThuisClubNaam = thuisclub.Naam,
+                    UitCLubNaam = uitclub.Naam,
+                    StadiumNaam = stadion.Naam,
+                    VakNaam = vak.Omschrijving,
+                    WedstrijdDatum = wedstrijd.Datum,
+                    StukPrijs = stadionVak.Prijs,
+                    Aantal = atlTickets
+                };
+                shopping.ShoppingCart.Add(item);
+                HttpContext.Session.SetObject("ShoppingCart", shopping);
+                return RedirectToAction("Index", "ShoppingCart");
+            }
         }
     }
 }

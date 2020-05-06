@@ -31,11 +31,6 @@ namespace Ticketverkoop.Controllers
 
             var listVM = _mapper.Map<List<ClubVM>>(list);
 
-            foreach (ClubVM clubVM in listVM)
-            {
-                clubVM.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
-            }
-
             return View(listVM);
         }
 
@@ -56,7 +51,43 @@ namespace Ticketverkoop.Controllers
             var clubDetails = new ClubVM();
             clubDetails = _mapper.Map<ClubVM>(club);
 
+            
+                clubDetails.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+            
+
             return View(clubDetails);
         }
+
+
+        /*
+      public IActionResult Koop(int? clubId, int? vakId)
+        {
+            ClubVM getClubDetailsVM()
+            {
+                Club club = clubService.GetClubById(Convert.ToInt32(clubId));
+                var clubDetails = new ClubVM();
+                clubDetails = _mapper.Map<ClubVM>(club);
+
+
+                clubDetails.Vakken = new SelectList(vakService.GetAll(), "Id", "Omschrijving");
+
+                return clubDetails;
+            }
+
+            if (clubId == null || vakId == null)
+            {
+                if(clubId == null){ return NotFound(); }
+                if(vakId == null)
+                {
+                    ModelState.AddModelError("error", "Er moet een vak geslecteerd zijn om een abonemment te kunnen kopen");
+                    return View("Details", getClubDetailsVM());
+                }
+            }
+
+            Club clubDetail = clubService.GetClubById(Convert.ToInt32(clubId));
+            Stadion stadion = 
+            return View();
+        } */
+        
     }
 }

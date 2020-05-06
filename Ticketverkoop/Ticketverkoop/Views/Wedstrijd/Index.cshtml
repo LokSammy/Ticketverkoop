@@ -4,91 +4,128 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h1>Wedstrijden</h1>
 
 <div class="row">
     <div class="col-md-4">
-        <div class="form-group">
-            <label for="clubId" class="control-label"></label>
-            <select name="clubId" id="clubId"
-                    asp-items="@ViewBag.lstClubs">
-                <option id="Clubkeuze">Zoek naar een club...</option>
-            </select>
+      
+        <form asp-action="Index">
 
-        </div>
+            <div class="form-group">
 
-        <div class="form-group">
-            <input type="submit" value="Zoek!" id="zoek" class="btn btn-default" hidden />
-        </div>
+                <label for="clubId" class="control-label"></label>
+                <select name="clubId" id="clubId"
+                        asp-items="@ViewBag.lstClubs">
+                    <option id="Clubkeuze">Zoek naar een club...</option>
+                </select>
+
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Zoek!" id="zoek" class="btn btn-default" hidden />
+            </div>
 
 
 
-        <div class="form-group">
-            <a asp-action="Index" asp-route-clubId="null">Volledig wedstrijd overzicht</a>
-        </div>
-    </div>
+            <div class="form-group">
+                <a asp-action="Index">Volledig wedstrijd overzicht</a>
+            </div>
+
+        </form>
+</div>
 </div>
 
+<span class="text-danger">@Html.ValidationMessage("error")</span>
 
-<table class="table">
-    <span class="text-danger">@Html.ValidationMessage("error")</span>
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ThuisClubNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UitClubNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Datum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StadionNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vakken)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            @foreach (var item in Model)
+    <table class="table">
 
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ThuisClubNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UitClubNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Datum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StadionNaam)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Vakken)
+                </th>
+                <th>
+                    aantal
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ThuisClubNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UitClubNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Datum)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StadionNaam)
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <label for="vakId" class="control-label"></label>
-                            <select name="vakId" id="vakId"
-                                    asp-items="@item.Vakken"
-                                    asp-for="@item.GekozenVakId">
-                                <option>Kies een vak...</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        <a class="btn btn-success" asp-action="Koop" asp-route-wetId="@item.Id" asp-route-vakId=4>Koop tickets</a>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+                @foreach (var item in Model)
+
+                {
+
+                    <form asp-action="Koop" asp-route-wetId="@item.Id">
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UitClubNaam)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Datum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StadionNaam)
+                            </td>
+                            @*
+                            <td>
+                                <input class="btn btn-info btnKoop" value="Koop ticket" />
+                            </td>
+                            *@
+                            <td class="koop">
+                                <div class="form-group">
+                                    <label for="vakId" class="control-label"></label>
+                                    <select name="vakId" id="vakId"
+                                            asp-items="@item.Vakken"
+                                            asp-for="@item.GekozenVakId">
+                                        <option>Kies een vak...</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="koop">
+                                <div class="form-group">
+                                    <input name="atlTickets" for="atlTickets" id="atlTickets" type="number" min="0" max="10" />
+                                </div>
+                            </td>
+                            @if (item.Datum <= DateTime.Now.AddMonths(1))
+                            {
+                                <td class="koop">
+
+                                    <input type="submit" value="Toevoegen aan winkelmandje" id="naarWinkelmand" class="btn btn-success"  />
+
+                                </td>
+                            }
+
+                        </tr>
+                        
+                        </form>
+
+                        }
+
+                        }
+                </tbody>
+
+    </table>
+
 
 @section Scripts{
 
@@ -96,10 +133,10 @@
         $(() => {
             $("#clubId").on("change", (e) => {
                 console.log(e);
-                console.log("change");
+                console.log("change")
+            });
 
-                $("#zoek").click();
-            })
+
         });
 
 
