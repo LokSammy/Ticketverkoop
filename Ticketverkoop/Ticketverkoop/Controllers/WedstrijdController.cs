@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Ticketverkoop.Domain.Entities;
 using Ticketverkoop.Extensions;
 using Ticketverkoop.Service;
@@ -70,7 +71,7 @@ namespace Ticketverkoop.Controllers
         }
 
 
-        public IActionResult Koop(int? wetId, int? vakId, int atlTickets)
+        public IActionResult Koop(int? wedstrijdId, int? vakId, int atlTickets)
         {
             //geeft listVM terug voor alle wedstrijden
             IEnumerable<WedstrijdVM> getListWedstrijdVMs()
@@ -92,7 +93,7 @@ namespace Ticketverkoop.Controllers
                 return listVM;
             }
 
-            if (wetId == null || vakId == null || atlTickets == 0)
+            if (wedstrijdId == null || vakId == null || atlTickets == 0)
             {
                 if (vakId == null || atlTickets == 0) 
                 {
@@ -104,7 +105,7 @@ namespace Ticketverkoop.Controllers
 
             }
 
-            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(wetId));
+            Wedstrijd wedstrijd = wedstrijdService.GetWedstrijdById(Convert.ToInt32(wedstrijdId));
             Club thuisclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.ThuisClubId));
             Club uitclub = clubService.GetClubById(Convert.ToInt32(wedstrijd.UitClubId));
             Stadion stadion = stadionService.GetStadionById(Convert.ToInt32(thuisclub.StadionId));
@@ -139,6 +140,25 @@ namespace Ticketverkoop.Controllers
                 }
             }
 
+            Boolean zelfdeWedstrijdDatum()
+            { 
+                foreach(CartVM cart in shopping.ShoppingCart)
+                {
+                    if(cart.WedstrijdDatum == wedstrijd.Datum)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            if (!zelfdeWedstrijdDatum())
+            {
+                ModelState.AddModelError("error", "Op deze datum hebt u al een ticket besteld.");
+
+                return View("Index", getListWedstrijdVMs());
+            }
 
             if (shoppingcartVol())
             {
@@ -154,7 +174,6 @@ namespace Ticketverkoop.Controllers
             } 
             else
             {
-
                 CartVM item = new CartVM
                 {
                     WedstrijdId = wedstrijd.Id,
@@ -167,6 +186,7 @@ namespace Ticketverkoop.Controllers
                     StukPrijs = stadionVak.Prijs,
                     Aantal = atlTickets
                 };
+
                 shopping.ShoppingCart.Add(item);
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
                 return RedirectToAction("Index", "ShoppingCart");
