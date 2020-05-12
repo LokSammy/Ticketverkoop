@@ -20,7 +20,7 @@ namespace Ticketverkoop.Repository
         public IEnumerable<Wedstrijd> GetAll()
         {
             return _dbContext.Wedstrijd
-                .Where(s => s.Datum > DateTime.Now)
+                //.Where(s => s.Datum > DateTime.Now)
                 .Include(s => s.UitClub)
                 .Include(s => s.ThuisClub.Stadion.StadionVak)
                 .OrderBy(s => s.Datum)

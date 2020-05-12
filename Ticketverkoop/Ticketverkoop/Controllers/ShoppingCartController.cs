@@ -50,8 +50,6 @@ namespace Ticketverkoop.Controllers
             ShoppingCartVM cartList =
                 HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
 
-            //var totaal = 0;
-
 
             for (int i = 0; i < cartList.ShoppingCart.Count; i++)
             {
@@ -64,17 +62,10 @@ namespace Ticketverkoop.Controllers
                 shoppingCartVM.ShoppingCart[i].StadiumNaam = cart.StadiumNaam;
                 shoppingCartVM.ShoppingCart[i].VakNaam = cart.VakNaam;
                 shoppingCartVM.ShoppingCart[i].WedstrijdDatum = cart.WedstrijdDatum;
-                shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
+                shoppingCartVM.ShoppingCart[i].StukPrijs = cart.StukPrijs;
                 shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
-                //totaal += cart.Aantal;
+                
             }
-
-            //if(totaal > 10)
-            //{
-            //    ModelState.AddModelError("error", "Je kan maximum 10 tickets bestellen.");
-            //    ShoppingCartVM listVM = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            //    return View("Index");
-            //}
 
             HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
             return View("Index", shoppingCartVM);

@@ -23,7 +23,7 @@ namespace Ticketverkoop.ViewModels
         [Display(Name = "Vak")]
         public IEnumerable<SelectListItem> Vakken { get; set; }
         public int GekozenVakId { get; set; }
-        public float Prijs { get; set; }
+        
 
     }
 }

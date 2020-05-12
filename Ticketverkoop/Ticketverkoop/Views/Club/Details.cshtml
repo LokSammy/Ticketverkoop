@@ -36,7 +36,19 @@
         </dd>
     </dl>
 </div>
+<div id="abo">
+    <form asp-action="Koop" asp-route-clubId="@Model.Id">
+        <h3>Koop uw abonement</h3>
+        <div class="form-group">
+            <label for="vakId" class="control-label"></label>
+            <select name="vakId" id="vakId"
+                    asp-items="@Model.Vakken">
+                <option>Kies een vak...</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Naar winkelmand</button>
+    </form>
+</div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
     <a asp-action="Index">Back to List</a>
 </div>

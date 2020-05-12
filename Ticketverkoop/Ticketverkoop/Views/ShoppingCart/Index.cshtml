@@ -31,7 +31,7 @@
                     @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdDatum)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Prijs)
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].StukPrijs)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ShoppingCart[0].Aantal)
@@ -43,7 +43,6 @@
             @{ decimal total = 0;}
             @for (var i = 0; i < Model.ShoppingCart.Count; i++)
             {
-                @*<span class="text-danger">@Html.ValidationMessage("error")</span>*@
                 <tr>
                     <td>
                         <input asp-for="@Model.ShoppingCart[i].WedstrijdId" readonly="readonly" class="form-control" />
@@ -64,31 +63,31 @@
                         <input asp-for="@Model.ShoppingCart[i].WedstrijdDatum" readonly="readonly" class="form-control" />
                     </td>
                     <td>
-                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="prijs" readonly="readonly" class="form-control" type="number" />
+                        <input asp-for="@Model.ShoppingCart[i].StukPrijs" id="stukprijs" readonly="readonly" class="form-control"  />
                     </td>
                     <td>
                         <input asp-for="@Model.ShoppingCart[i].Aantal" id="atlTickets" type="number" min="1" max="10" data-aantal="@i" />
                     </td>
                     <td>
                         @{
-                            var subtotaal = Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal;
+                            var subtotaal = Model.ShoppingCart[i].StukPrijs * Model.ShoppingCart[i].Aantal;
                             total += subtotaal;
                         }
                         <input id="subtot" value="@subtotaal" type="number" readonly="readonly" />
                     </td>
                     <td>
-                        <a asp-action="Delete" asp-route-WedstrijdId="@Model.ShoppingCart[i].WedstrijdId">Delete</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-WedstrijdId="@Model.ShoppingCart[i].WedstrijdId">Delete</a>
                     </td>
                 </tr>
             }
 
             <tr>
                 <td>
-                    <input id="btnCheckout" type="submit" value="Checkout" class="btn btn-default" />
+                    <a asp-controller="ShoppingCart" asp-action="Payment">Checkout</a>
                 </td>
             <tr>
                 <td>
-                    Total
+                    Totaal
                 </td>
             </tr>
             <tr>
@@ -102,10 +101,10 @@
 
 }
 else
-{ @Html.Raw("Your shoppingcart is empty at the moment")
+{ @Html.Raw("Winkelwagen is momenteel leeg")
 }
 
-<a asp-controller="Home"
+<a asp-controller="Wedstrijd"
    asp-action="Index">
     Verder winkelen
 </a>
@@ -114,7 +113,7 @@ else
 
 <script>
     $(() => {
-        $("[id$=Aantal]").on('change', (e) => {
+        /*$("[id$=Aantal]").on('change', (e) => {
             console.log(e);
             console.log("change");
             let atl = $(e.currentTarget).val();
@@ -138,6 +137,7 @@ else
             let aantal = atlTickets.val();
             console.log(aantal);
         }
+        */
     });
 
 </script>
