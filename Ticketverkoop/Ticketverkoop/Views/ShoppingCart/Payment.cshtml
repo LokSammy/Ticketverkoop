@@ -1,0 +1,21 @@
+﻿@model Ticketverkoop.ViewModels.ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h1>Payment</h1>
+
+<div>
+    <h4>ShoppingCartVM</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<div>
+    <p>Bedankt voor uw bestelling.</p>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

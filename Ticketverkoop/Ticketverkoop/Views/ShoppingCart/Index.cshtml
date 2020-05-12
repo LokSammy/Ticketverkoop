@@ -83,11 +83,11 @@
 
             <tr>
                 <td>
-                    <input id="btnCheckout" type="submit" value="Checkout" class="btn btn-default" />
+                    <a asp-controller="ShoppingCart" asp-action="Payment">Checkout</a>
                 </td>
             <tr>
                 <td>
-                    Total
+                    Totaal
                 </td>
             </tr>
             <tr>
@@ -101,10 +101,10 @@
 
 }
 else
-{ @Html.Raw("Your shoppingcart is empty at the moment")
+{ @Html.Raw("Winkelwagen is momenteel leeg")
 }
 
-<a asp-controller="Home"
+<a asp-controller="Wedstrijd"
    asp-action="Index">
     Verder winkelen
 </a>

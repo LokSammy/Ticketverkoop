@@ -226,11 +226,15 @@ namespace Ticketverkoop.Domain.Entities
 
             modelBuilder.Entity<StadionVak>(entity =>
             {
+                entity.Property(e => e.AbonnementPrijs).HasColumnType("decimal(12, 2)");
+
                 entity.Property(e => e.Prijs).HasColumnType("decimal(12, 2)");
 
                 entity.Property(e => e.StadionId).HasColumnName("Stadion_id");
 
                 entity.Property(e => e.VakId).HasColumnName("Vak_id");
+
+                entity.Property(e => e.WedstrijdId).HasColumnName("Wedstrijd_id");
 
                 entity.HasOne(d => d.Stadion)
                     .WithMany(p => p.StadionVak)
@@ -243,6 +247,11 @@ namespace Ticketverkoop.Domain.Entities
                     .HasForeignKey(d => d.VakId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Vak_id_StadionVak");
+
+                entity.HasOne(d => d.Wedstrijd)
+                    .WithMany(p => p.StadionVak)
+                    .HasForeignKey(d => d.WedstrijdId)
+                    .HasConstraintName("FK_Wedstrijd_id_StadionVak");
             });
 
             modelBuilder.Entity<Ticket>(entity =>
@@ -320,6 +329,8 @@ namespace Ticketverkoop.Domain.Entities
 
             modelBuilder.Entity<Wedstrijd>(entity =>
             {
+                entity.Property(e => e.Datum).HasColumnType("datetime");
+
                 entity.Property(e => e.ThuisClubId).HasColumnName("ThuisClub_id");
 
                 entity.Property(e => e.UitClubId).HasColumnName("UitClub_id");
