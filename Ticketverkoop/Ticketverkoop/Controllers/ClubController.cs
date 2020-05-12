@@ -17,12 +17,14 @@ namespace Ticketverkoop.Controllers
 
         private ClubService clubService;
         private VakService vakService;
+        private StadionService stadionService;
 
         public ClubController(IMapper mapper)
         {
             _mapper = mapper;
             clubService = new ClubService();
             vakService = new VakService();
+            stadionService = new StadionService();
         }
 
         public IActionResult Index()
@@ -57,6 +59,26 @@ namespace Ticketverkoop.Controllers
             clubDetails = _mapper.Map<ClubVM>(club);
 
             return View(clubDetails);
+        }
+
+        public IActionResult Koop(Club aboClub, Vak aboVak)
+        {            
+            double kostprijs = 100.00;
+
+            Stadion stadion = stadionService.GetStadionById(aboClub.StadionId);
+
+
+            CartVM item = new CartVM
+            {
+                ThuisClubId = aboClub.Id,
+                ThuisClubNaam = aboClub.Naam,
+                StadiumNaam = stadion.Naam,
+                VakNaam = aboVak.Omschrijving,
+                Aantal = 1,
+                Prijs = 100              
+
+            };
+            return View();
         }
     }
 }

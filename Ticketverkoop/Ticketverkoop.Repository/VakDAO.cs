@@ -10,11 +10,11 @@ namespace Ticketverkoop.Repository
 {
     public class VakDAO
     {
-        private readonly TicketVerkoopContext _dbContext;
+        private readonly TicketverkoopContext _dbContext;
 
         public VakDAO()
         {
-            _dbContext = new TicketVerkoopContext();
+            _dbContext = new TicketverkoopContext();
         }
 
         public Vak GetVakById(int id)

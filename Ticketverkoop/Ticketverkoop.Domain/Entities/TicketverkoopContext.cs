@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ticketverkoop.Domain.Entities
 {
-    public partial class TicketVerkoopContext : DbContext
+    public partial class TicketverkoopContext : DbContext
     {
-        public TicketVerkoopContext()
+        public TicketverkoopContext()
         {
         }
 
-        public TicketVerkoopContext(DbContextOptions<TicketVerkoopContext> options)
+        public TicketverkoopContext(DbContextOptions<TicketverkoopContext> options)
             : base(options)
         {
         }

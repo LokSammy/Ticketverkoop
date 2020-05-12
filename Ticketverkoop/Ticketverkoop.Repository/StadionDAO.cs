@@ -10,11 +10,11 @@ namespace Ticketverkoop.Repository
 {
     public class StadionDAO
     {
-        private readonly TicketVerkoopContext _dbContext;
+        private readonly TicketverkoopContext _dbContext;
 
         public StadionDAO()
         {
-            _dbContext = new TicketVerkoopContext();
+            _dbContext = new TicketverkoopContext();
         }
 
         public IEnumerable<Stadion> GetAll()

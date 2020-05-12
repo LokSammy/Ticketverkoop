@@ -9,11 +9,11 @@ namespace Ticketverkoop.Repository
 {
     public class StadionVakDAO
     {
-        private readonly TicketVerkoopContext _dbContext;
+        private readonly TicketverkoopContext _dbContext;
 
         public StadionVakDAO()
         {
-            _dbContext = new TicketVerkoopContext();
+            _dbContext = new TicketverkoopContext();
         }
 
         public IEnumerable<StadionVak> GetAll()
