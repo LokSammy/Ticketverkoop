@@ -31,7 +31,7 @@
                     @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdDatum)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].StukPrijs)
+                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Prijs)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ShoppingCart[0].Aantal)
@@ -63,14 +63,14 @@
                         <input asp-for="@Model.ShoppingCart[i].WedstrijdDatum" readonly="readonly" class="form-control" />
                     </td>
                     <td>
-                        <input asp-for="@Model.ShoppingCart[i].StukPrijs" id="stukprijs" readonly="readonly" class="form-control"  />
+                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="stukprijs" readonly="readonly" class="form-control"  />
                     </td>
                     <td>
                         <input asp-for="@Model.ShoppingCart[i].Aantal" id="atlTickets" type="number" min="1" max="10" data-aantal="@i" />
                     </td>
                     <td>
                         @{
-                            var subtotaal = Model.ShoppingCart[i].StukPrijs * Model.ShoppingCart[i].Aantal;
+                            var subtotaal = Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal;
                             total += subtotaal;
                         }
                         <input id="subtot" value="@subtotaal" type="number" readonly="readonly" />

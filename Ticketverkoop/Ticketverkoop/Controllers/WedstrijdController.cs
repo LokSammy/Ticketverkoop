@@ -183,7 +183,7 @@ namespace Ticketverkoop.Controllers
                     StadiumNaam = stadion.Naam,
                     VakNaam = vak.Omschrijving,
                     WedstrijdDatum = wedstrijd.Datum,
-                    StukPrijs = stadionVak.Prijs,
+                    Prijs = (decimal) stadionVak.Prijs,
                     Aantal = atlTickets
                 };
 
