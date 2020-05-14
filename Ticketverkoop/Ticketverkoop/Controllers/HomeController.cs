@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +19,24 @@ namespace Ticketverkoop.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            string url = "http://api.weatherstack.com/current?access_key=b43804f796c69ffeb190b7f4d8c286fd&query=Belgium";
+            WebRequest requestObjectGet = WebRequest.Create(url);
+            requestObjectGet.Method = "GET";
+            HttpWebResponse responseObjectGet = null;
+            responseObjectGet = (HttpWebResponse)requestObjectGet.GetResponse();
+
+            string stringResult = null;
+            using (Stream stream = responseObjectGet.GetResponseStream())
+            {
+                StreamReader sr = new StreamReader(stream);
+                stringResult = sr.ReadToEnd();
+                sr.Close();
+            }
+
+            var weerObject = JsonSerializer.Deserialize<WeerVM>(stringResult);
+
+
+            return View(weerObject);
         }
 
 
@@ -65,5 +85,6 @@ namespace Ticketverkoop.Controllers
 
             return View();
         }
+
     }
 }

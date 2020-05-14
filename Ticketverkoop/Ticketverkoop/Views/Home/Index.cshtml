@@ -1,8 +1,26 @@
-﻿@{
+﻿@model Ticketverkoop.ViewModels.WeerVM
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<div class="text-center">
+
+    <h4>Temperatuur</h4>
+    <p>@Model.current.temperature °C</p>
+    <h4>Windsnelheid</h4>
+    <p>@Model.current.wind_speed km/u</p>
+    <h4>Weerbeschrijving</h4>
+    @foreach (var item in Model.current.weather_descriptions)
+    {
+        <p>@item</p>
+    }
+    @foreach (var item in Model.current.weather_icons)
+    {
+        <img src="@item" />
+    }
+
 </div>

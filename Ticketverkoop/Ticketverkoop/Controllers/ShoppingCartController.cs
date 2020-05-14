@@ -62,7 +62,7 @@ namespace Ticketverkoop.Controllers
                 shoppingCartVM.ShoppingCart[i].StadiumNaam = cart.StadiumNaam;
                 shoppingCartVM.ShoppingCart[i].VakNaam = cart.VakNaam;
                 shoppingCartVM.ShoppingCart[i].WedstrijdDatum = cart.WedstrijdDatum;
-                shoppingCartVM.ShoppingCart[i].StukPrijs = cart.StukPrijs;
+                shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
                 shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
                 
             }
