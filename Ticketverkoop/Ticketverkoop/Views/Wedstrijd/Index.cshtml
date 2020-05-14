@@ -38,93 +38,101 @@
 
 <span class="text-danger">@Html.ValidationMessage("error")</span>
 
-    <table class="table">
+<div class="Overview">
 
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ThuisClubNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UitClubNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Datum)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StadionNaam)
-                </th>
+        <div class="Overview-titles">
+            <p>
+                @Html.DisplayNameFor(model => model.ThuisClubNaam)
+            </p>
+            <p>
+                @Html.DisplayNameFor(model => model.UitClubNaam)
+            </p>
+            <p>
+                @Html.DisplayNameFor(model => model.Datum)
+            </p>
+            <p>
+                @Html.DisplayNameFor(model => model.StadionNaam)
+            </p>
+            <p>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.Vakken)
-                </th>
-                <th>
-                    aantal
-                </th>
-            </tr>
-        </thead>
+            </p>
+        </div>
+    
 
-        <tbody>
-            @if (Model != null)
+    <div class="Overview-items">
+
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+
             {
-                @foreach (var item in Model)
+        <div class="Overview-item">
+            <p>
+                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
+            </p>
+            <p>
+                @Html.DisplayFor(modelItem => item.UitClubNaam)
+            </p>
+            <p>
+                @Html.DisplayFor(modelItem => item.Datum)
+            </p>
+            <p>
+                @Html.DisplayFor(modelItem => item.StadionNaam)
+            </p>
+            @if (item.Datum <= DateTime.Now.AddMonths(1))
+            {
+                <p>
+                    <input readonly class="btn btn-info btnKoop" value="Koop ticket" />
+                </p>
+            }
+            else{ 
+            <p>
+                
+            </p>
+            }
 
-                {
+            <div class="Overview-item--fields">
 
-                    <form asp-action="Koop" asp-route-wedstrijdId="@item.Id">
+                <form asp-action="Koop" asp-route-wedstrijdId="@item.Id">
 
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ThuisClubNaam)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UitClubNaam)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Datum)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StadionNaam)
-                            </td>
-                            @*
-                            <td>
-                                <input class="btn btn-info btnKoop" value="Koop ticket" />
-                            </td>
-                            *@
-                            <td class="koop">
-                                <div class="form-group">
-                                    <label for="vakId" class="control-label"></label>
-                                    <select name="vakId" id="vakId"
-                                            asp-items="@item.Vakken"
-                                            asp-for="@item.GekozenVakId">
-                                        <option>Kies een vak...</option>
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="koop">
-                                <div class="form-group">
-                                    <input name="atlTickets" for="atlTickets" id="atlTickets" type="number" min="0" max="10" />
-                                </div>
-                            </td>
-                            @if (item.Datum <= DateTime.Now.AddMonths(1))
-                            {
-                                <td class="koop">
+                    <p class="koop">
+                        <div class="form-group">
+                            <label for="vakId" class="control-label"></label>
+                            <select name="vakId" id="vakId"
+                                    asp-items="@item.Vakken"
+                                    asp-for="@item.GekozenVakId">
+                                <option>Kies een vak...</option>
+                            </select>
+                        </div>
+                    </p>
+                    <p class="koop">
+                        <div class="form-group">
+                            <input name="atlTickets" for="atlTickets" id="atlTickets" type="number" min="0" max="10" />
+                        </div>
+                    </p>
 
-                                    <input type="submit" value="Toevoegen aan winkelmandje" id="naarWinkelmand" class="btn btn-success"  />
+                    <p class="koop">
 
-                                </td>
-                            }
+                        <button type="submit" value="Toevoegen aan winkelmandje" id="naarWinkelmand" class="btn btn-success"> Toevoegen aan winkelmandje </button>
 
-                        </tr>
-                        
-                        </form>
+                    </p>
 
-                        }
 
-                        }
-                </tbody>
 
-    </table>
+
+                </form>
+
+            </div>
+
+</div> 
+            }
+
+            }
+        </div>
+
+</div>
+
+    
 
 
 @section Scripts{
@@ -133,9 +141,17 @@
         $(() => {
             $("#clubId").on("change", (e) => {
                 console.log(e);
-                console.log("change")
+                console.log("change");
+                $('#zoek').click();
+
             });
 
+            $('.btnKoop').each(function () {
+                $(this).on('click', function () {
+                    var fields = $(this).parent().parent().find('.Overview-item--fields');
+                    fields.slideToggle();
+                });
+            });
 
         });
 
