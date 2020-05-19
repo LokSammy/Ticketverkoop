@@ -5,17 +5,25 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Ticketverkoop.Areas.Identity.Data;
+using Ticketverkoop.Domain.Entities;
 using Ticketverkoop.Models;
+using Ticketverkoop.Service;
 using Ticketverkoop.ViewModels;
 
 namespace Ticketverkoop.Controllers
 {
     public class HomeController : Controller
     {
+        private AspNetUsersService usersService;
 
         public IActionResult Index()
         {
@@ -48,6 +56,31 @@ namespace Ticketverkoop.Controllers
 
         public IActionResult Contact()
         {
+            if(User.FindFirst(ClaimTypes.NameIdentifier) != null)
+            {
+                usersService = new AspNetUsersService();
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                AspNetUsers userNow = usersService.GetUserById(userId);
+                if (!userNow.EmailConfirmed)
+                {
+                    ViewBag.Message = "Bevestig uw Email aub.";
+                    return View();
+                }
+                else 
+                {
+                    ContactVM contact = new ContactVM
+                    {
+                        Email = userNow.Email,
+                        Naam = userNow.Name,
+                        Voornaam = userNow.FirstName,
+                        Message = " "
+
+                    };
+                    return View(contact);
+                }
+
+
+            }
             return View();
         }
 

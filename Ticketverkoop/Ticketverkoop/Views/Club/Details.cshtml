@@ -37,16 +37,19 @@
     </dl>
 </div>
 <div id="abo">
-    <form asp-action="Koop" asp-route-clubId="@Model.Id">
+    <form asp-action="Koop" asp-route-aboClubId="@Model.Id">
         <h3>Koop uw abonement</h3>
+        <span class="text-danger">@Html.ValidationMessage("error")</span>
         <div class="form-group">
             <label for="vakId" class="control-label"></label>
             <select name="vakId" id="vakId"
-                    asp-items="@Model.Vakken">
-                <option>Kies een vak...</option>
+                    asp-items="@Model.Vakken"
+                    asp-for="@Model.GekozenVakId"
+                    required>
+                <option></option>
             </select>
         </div>
-        <button type="submit" class="btn btn-success">Naar winkelmand</button>
+        <button type="submit" class="btn btn-success">Toevoegen aan winkelmandje</button>
     </form>
 </div>
 <div>

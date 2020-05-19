@@ -9,43 +9,45 @@
 @if (Model != null)
 {
 
-    <form asp-action="Payment" id="target">
-        <table>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].ThuisClubNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].UitCLubNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].StadiumNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].VakNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdDatum)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Prijs)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShoppingCart[0].Aantal)
-                </th>
-                <th>
-                    Subtotaal
-                </th>
-            </tr>
-            @{ decimal total = 0;}
-            @for (var i = 0; i < Model.ShoppingCart.Count; i++)
+<form asp-action="Payment" id="target" asp-route-shoppingCartVM="@Model">
+    <table>
+        <tr>
+            <th>
+                <p>Type</p>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].ThuisClubNaam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].UitCLubNaam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].StadiumNaam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].VakNaam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].WedstrijdDatum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].Prijs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShoppingCart[0].Aantal)
+            </th>
+            <th>
+                Subtotaal
+            </th>
+        </tr>
+        @{ float total = 0;}
+        @for (var i = 0; i < Model.ShoppingCart.Count; i++)
+        {
+            @if (Model.ShoppingCart[i].WedstrijdId != null)
             {
                 <tr>
                     <td>
-                        <input asp-for="@Model.ShoppingCart[i].WedstrijdId" readonly="readonly" class="form-control" />
+                        <p>Wedstrijdticket</p>
                     </td>
                     <td>
                         <input asp-for="@Model.ShoppingCart[i].ThuisClubNaam" readonly="readonly" class="form-control" />
@@ -63,41 +65,85 @@
                         <input asp-for="@Model.ShoppingCart[i].WedstrijdDatum" readonly="readonly" class="form-control" />
                     </td>
                     <td>
-                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="stukprijs" readonly="readonly" class="form-control"  />
-                    </td>
-                    <td>
-                        <input asp-for="@Model.ShoppingCart[i].Aantal" id="atlTickets" type="number" min="1" max="10" data-aantal="@i" />
-                    </td>
-                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="@("txtPrijs") + @i)" readonly="readonly" class="form-control" />
+
                         @{
-                            var subtotaal = Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal;
+                            var subtotaal = (float)(Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal);
                             total += subtotaal;
                         }
-                        <input id="subtot" value="@subtotaal" type="number" readonly="readonly" />
                     </td>
                     <td>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-WedstrijdId="@Model.ShoppingCart[i].WedstrijdId">Delete</a>
+                        <input asp-for="@Model.ShoppingCart[i].Aantal" id="Aantal" type="number" min="1" max="10"  readonly="readonly" data-aantal=@i />
+                    </td>
+                    <td>
+                        <input id="@("txtSubTotal") + @i)" value="@subtotaal" type="number" readonly="readonly" />
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-Item="@i">Delete</a>
                     </td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td>
+                        <p>Abonnement</p>
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].ThuisClubNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input value="" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].StadiumNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].VakNaam" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input value="" readonly="readonly" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].Prijs" id="@("txtPrijs") + @i)" readonly="readonly" class="form-control" />
+                        @{
+                            var subtotaal = (float)(Model.ShoppingCart[i].Prijs * Model.ShoppingCart[i].Aantal);
+                            total += subtotaal;
+                        }
+                    </td>
+                    <td>
+                        <input asp-for="@Model.ShoppingCart[i].Aantal" id="Aantal" readonly="readonly" type="number" value="1" />
+                    </td>
 
-            <tr>
-                <td>
-                    <a asp-controller="ShoppingCart" asp-action="Payment">Checkout</a>
-                </td>
-            <tr>
-                <td>
-                    Totaal
-                </td>
-            </tr>
-            <tr>
-                <td id="cart-total">
-                    <input id="txtTotal" value="@total" type="number" readonly="readonly" />
-                </td>
-            </tr>
+                    <td>
+                        <input id="@("txtSubTotal") + @i)" value="@subtotaal" type="number" readonly="readonly" />
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-Item="@i">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        <tr>
+            <td>
+                Totaal
+            </td>
+        </tr>
+        <tr>
+            <td id="cart-total">
+                <input id="txtTotal" value="@total" type="number" readonly="readonly" />
+            </td>
+        </tr>
 
-        </table>
-    </form>
+    </table>
+    <p class="koop">
+
+        <button type="submit" id="naarWinkelmand" class="btn btn-success"> Betaal </button>
+
+    </p>
+</form>
+
+
 
 }
 else
@@ -113,6 +159,29 @@ else
 
 <script>
     $(() => {
+        //selecteer alle input elementen die eindigen met aantal
+        $("[id$=Aantal]").on('change', (e) => {
+            console.log("change");
+            let number = $(e.currentTarget).data("aantal"); // hoeveelste element, bijhouden in een data-aantal atttribute
+            console.log(number);
+            let aantal = $(e.currentTarget).val();
+            console.log(aantal);
+            let prijsSelector = ("txtPrijs" + number);
+            let price = $("#" + prijsSelector).val();
+            console.log(price);
+            let selector = ("txtSubTotal" + number);
+            $('#' + selector).val(aantal*price);
+            let sum = 0;
+            $('[id^=txtSubTotal]').each((index, element) => {
+                if (!isNaN($(element).val())) {
+                    sum += parseFloat($(element).val());
+                }
+            });
+            console.log(sum)
+
+            $('#txtTotal').val(sum);
+        });
+
         /*$("[id$=Aantal]").on('change', (e) => {
             console.log(e);
             console.log("change");

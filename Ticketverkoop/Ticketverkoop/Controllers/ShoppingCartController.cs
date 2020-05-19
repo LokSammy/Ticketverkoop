@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Ticketverkoop.Domain.Entities;
 using Ticketverkoop.Extensions;
+using Ticketverkoop.Service;
 using Ticketverkoop.ViewModels;
 
 namespace Ticketverkoop.Controllers
 {
     public class ShoppingCartController : Controller
     {
+
+        private AspNetUsersService usersService;
+        public ShoppingCartController()
+        {
+            usersService = new AspNetUsersService();
+        }
+
+
         public IActionResult Index()
         {
             ShoppingCartVM cartList =
@@ -22,21 +33,26 @@ namespace Ticketverkoop.Controllers
 
             return View(cartList);
         }
-        public IActionResult Delete(int? WedstrijdId)
+        public IActionResult Delete(int? Item)
         {
-            if (WedstrijdId == null)
+            if (Item == null)
             {
                 return NotFound();
             }
 
             ShoppingCartVM cartList =
                 HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            
             // call SessionID
             var SessionId = HttpContext.Session.Id;
-            var itemToRemove = cartList.ShoppingCart.FirstOrDefault(r => r.WedstrijdId == WedstrijdId);
+            var itemToRemove = cartList.ShoppingCart[Convert.ToInt32(Item)];
             if (itemToRemove != null)
             {
                 cartList.ShoppingCart.Remove(itemToRemove);
+                if (cartList.ShoppingCart.Count == 0)
+                {
+                    cartList = null;
+                }
                 HttpContext.Session.SetObject("ShoppingCart", cartList);
             }
 
@@ -47,28 +63,35 @@ namespace Ticketverkoop.Controllers
         [HttpPost]
         public IActionResult Payment(ShoppingCartVM shoppingCartVM)
         {
-            ShoppingCartVM cartList =
-                HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-
-
-            for (int i = 0; i < cartList.ShoppingCart.Count; i++)
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            AspNetUsers userNow = usersService.GetUserById(userId);
+            if (!userNow.EmailConfirmed)
             {
-                CartVM cart = cartList.ShoppingCart[i];
+                ModelState.AddModelError("error", "U moet eerst uw email bevestigen.");
+                return View("Index", shoppingCartVM);
+            }
+            else
+            {
+                for (int i = 0; i < shoppingCartVM.ShoppingCart.Count; i++)
+                {
+                    CartVM cart = shoppingCartVM.ShoppingCart[i];
 
-                shoppingCartVM.ShoppingCart[i].WedstrijdId = cart.WedstrijdId;
-                shoppingCartVM.ShoppingCart[i].ThuisClubId = cart.ThuisClubId;
-                shoppingCartVM.ShoppingCart[i].ThuisClubNaam = cart.ThuisClubNaam;
-                shoppingCartVM.ShoppingCart[i].UitCLubNaam = cart.UitCLubNaam;
-                shoppingCartVM.ShoppingCart[i].StadiumNaam = cart.StadiumNaam;
-                shoppingCartVM.ShoppingCart[i].VakNaam = cart.VakNaam;
-                shoppingCartVM.ShoppingCart[i].WedstrijdDatum = cart.WedstrijdDatum;
-                shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
-                shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
-                
+                    shoppingCartVM.ShoppingCart[i].WedstrijdId = cart.WedstrijdId;
+                    shoppingCartVM.ShoppingCart[i].ThuisClubId = cart.ThuisClubId;
+                    shoppingCartVM.ShoppingCart[i].ThuisClubNaam = cart.ThuisClubNaam;
+                    shoppingCartVM.ShoppingCart[i].UitCLubNaam = cart.UitCLubNaam;
+                    shoppingCartVM.ShoppingCart[i].StadiumNaam = cart.StadiumNaam;
+                    shoppingCartVM.ShoppingCart[i].VakNaam = cart.VakNaam;
+                    shoppingCartVM.ShoppingCart[i].WedstrijdDatum = cart.WedstrijdDatum;
+                    shoppingCartVM.ShoppingCart[i].Prijs = cart.Prijs;
+                    shoppingCartVM.ShoppingCart[i].Aantal = cart.Aantal;
+
+                }
+
+
             }
 
-            HttpContext.Session.SetObject("ShoppingCart", shoppingCartVM);
-            return View("Index", shoppingCartVM);
+            return View();
         }
     }
 }

@@ -18,5 +18,6 @@ namespace Ticketverkoop.ViewModels
         public string Logo { get; set; }
         [Display(Name = "Vak")]
         public IEnumerable<SelectListItem> Vakken { get; set; }
+        public int GekozenVakId { get; set; }
     }
 }

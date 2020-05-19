@@ -184,7 +184,8 @@ namespace Ticketverkoop.Controllers
                     VakNaam = vak.Omschrijving,
                     WedstrijdDatum = wedstrijd.Datum,
                     Prijs = (decimal) stadionVak.Prijs,
-                    Aantal = atlTickets
+                    Aantal = atlTickets,
+                    VakId = vak.Id
                 };
 
                 shopping.ShoppingCart.Add(item);
